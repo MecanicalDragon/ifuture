@@ -22,6 +22,7 @@
     <modules>
         <module>account_service</module>
         <module>statistics_service</module>
+        <module>test_client</module>
     </modules>
 
     <dependencies>

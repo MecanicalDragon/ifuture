@@ -60,27 +60,31 @@ public class StatService {
     @Scheduled(cron = "${statistics.collecting.cron}")
     public void collectStatistics() {
         log.info("Starting statistics collecting job...");
-        Statistics statistics = restTemplate.getForObject(accountServiceUrl + "/getStatistics", Statistics.class);
-        if (statistics != null) {
-            val now = ZonedDateTime.now(ZoneOffset.UTC);
-            val totalGet = totalGetAmountEndpointRequestsCount.addAndGet(statistics.getGetAmountRequestQuantity());
-            val totalAdd = totalAddAmountEndpointRequestsCount.addAndGet(statistics.getAddAmountRequestQuantity());
+        try {
+            Statistics statistics = restTemplate.getForObject(accountServiceUrl + "/getStatistics", Statistics.class);
+            if (statistics != null) {
+                val now = ZonedDateTime.now(ZoneOffset.UTC);
+                val totalGet = totalGetAmountEndpointRequestsCount.addAndGet(statistics.getGetAmountRequestQuantity());
+                val totalAdd = totalAddAmountEndpointRequestsCount.addAndGet(statistics.getAddAmountRequestQuantity());
 
-            val newGetAmountSnapshot = new GetAmountRequestStatisticsSnapshot(lastUpdateTimestamp, now,
-                    statistics.getGetAmountRequestQuantity(), totalGet);
+                val newGetAmountSnapshot = new GetAmountRequestStatisticsSnapshot(lastUpdateTimestamp, now,
+                        statistics.getGetAmountRequestQuantity(), totalGet);
 
-            val newAddAmountSnapshot = new AddAmountRequestStatisticsSnapshot(lastUpdateTimestamp, now,
-                    statistics.getAddAmountRequestQuantity(), totalAdd);
+                val newAddAmountSnapshot = new AddAmountRequestStatisticsSnapshot(lastUpdateTimestamp, now,
+                        statistics.getAddAmountRequestQuantity(), totalAdd);
 
-            try {
-                getRepository.save(newGetAmountSnapshot);
-                addRepository.save(newAddAmountSnapshot);
-                log.info("Statistics have been stored in the database successfully.");
-            } catch (DataAccessException e) {
-                log.error("Statistics for last time period have not been recorded because of DataAccessException: {}", e.getMessage());
-                e.printStackTrace();
+                try {
+                    getRepository.save(newGetAmountSnapshot);
+                    addRepository.save(newAddAmountSnapshot);
+                    log.info("Statistics have been stored in the database successfully.");
+                } catch (DataAccessException e) {
+                    log.error("Statistics for last time period have not been recorded because of DataAccessException: {}", e.getMessage());
+                    e.printStackTrace();
+                }
+                lastUpdateTimestamp = now;
             }
-            lastUpdateTimestamp = now;
+        } catch (Exception e) {
+            log.error("Exception has occurred during account service connection. Statistics collection has been interrupted.");
         }
     }
 
