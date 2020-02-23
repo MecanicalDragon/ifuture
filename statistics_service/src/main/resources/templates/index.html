@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>Account Service Statistics</title>
+</head>
+<body>
+<div style="display: flex">
+    <div style="padding: 5px; text-align: center">
+        <h3>GetAmount Requests</h3>
+        <table style="border: 2px double dimgray;">
+            <thead style="background-color: aliceblue">
+            <tr>
+                <td style="border: 1px solid darkgray">Start timestamp</td>
+                <td style="border: 1px solid darkgray">End timestamp</td>
+                <td style="border: 1px solid darkgray">Requests</td>
+                <td style="border: 1px solid darkgray">Total</td>
+            </tr>
+            </thead>
+            <tbody id="getBody">
+            <tr th:each="g, iter : ${getStats}">
+                <td style="border: 1px solid darkgray"><span th:text="${g.start}"/></td>
+                <td style="border: 1px solid darkgray"><span th:text="${g.end}"/></td>
+                <td style="border: 1px solid darkgray"><span th:text="${g.requestsAmount}"/></td>
+                <td style="border: 1px solid darkgray"><span th:text="${g.totalRequests}"/></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div style="padding: 5px; text-align: center">
+        <h3>AddAmount Requests</h3>
+        <table style="border: 2px double dimgray;">
+            <thead style="background-color: aliceblue">
+            <tr>
+                <td style="border: 1px solid darkgray">Start timestamp</td>
+                <td style="border: 1px solid darkgray">End timestamp</td>
+                <td style="border: 1px solid darkgray">Requests</td>
+                <td style="border: 1px solid darkgray">Total</td>
+            </tr>
+            </thead>
+            <tbody id="addBody">
+            <tr th:each="g, iter : ${addStats}">
+                <td style="border: 1px solid darkgray"><span th:text="${g.start}"/></td>
+                <td style="border: 1px solid darkgray"><span th:text="${g.end}"/></td>
+                <td style="border: 1px solid darkgray"><span th:text="${g.requestsAmount}"/></td>
+                <td style="border: 1px solid darkgray"><span th:text="${g.totalRequests}"/></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<!--<button onclick="download_csv()">Download CSV</button>-->
+<!--<button onclick="reset()">Evict statistics</button>-->
+
+<script>
+    var data = [
+        ['Foo', 'programmer'],
+        ['Bar', 'bus driver'],
+        ['Moo', 'Reindeer Hunter']
+    ];
+
+    function reset(){
+        var url = new URL(window.location.origin + '/addResp');
+        fetch(url, {method: 'POST'})
+    }
+
+
+    function download_csv() {
+        document.getElementById("getBody");
+        var csv = 'Start,End,Amount,Total\n';
+        data.forEach(function(row) {
+            csv += row.join(',');
+            csv += "\n";
+        });
+
+        console.log(csv);
+        var hiddenElement = document.createElement('a');
+        hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
+        hiddenElement.target = '_blank';
+        hiddenElement.download = 'people.csv';
+        hiddenElement.click();
+    }
+</script>
+
+</body>
+</html>

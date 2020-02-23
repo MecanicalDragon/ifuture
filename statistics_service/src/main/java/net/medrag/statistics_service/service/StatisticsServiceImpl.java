@@ -31,7 +31,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 @Slf4j
 @Service
-public class StatService {
+public class StatisticsServiceImpl implements StatisticsService{
 
     private RestTemplate restTemplate;
     private AddAmountRequestStatisticsSnapshotRepository addRepository;
@@ -45,7 +45,7 @@ public class StatService {
     private ZonedDateTime lastUpdateTimestamp = ZonedDateTime.now(ZoneOffset.UTC);
 
     @Autowired
-    public StatService(
+    public StatisticsServiceImpl(
             AddAmountRequestStatisticsSnapshotRepository addRepository,
             GetAmountRequestStatisticsSnapshotRepository getRepository,
             RestTemplateBuilder restTemplateBuilder) {
@@ -74,6 +74,8 @@ public class StatService {
                         statistics.getAddAmountRequestQuantity(), totalAdd);
 
                 try {
+                    System.out.println(newGetAmountSnapshot);
+                    System.out.println(newAddAmountSnapshot);
                     getRepository.save(newGetAmountSnapshot);
                     addRepository.save(newAddAmountSnapshot);
                     log.info("Statistics have been stored in the database successfully.");
