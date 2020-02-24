@@ -1,9 +1,7 @@
 package net.medrag.account_service.service;
 
 import io.micrometer.core.instrument.Counter;
-import io.micrometer.core.instrument.DistributionSummary;
 import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.Timer;
 import net.medrag.account_service.config.AtlasMetricsConfig;
 import net.medrag.account_service.service.api.MetricsMode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,12 +35,6 @@ public class AtlasMetricsMode implements MetricsMode {
     private Counter getCounter;
     private Counter addCounter;
 
-//    private Timer getTimer;
-//    private Timer addTimer;
-
-//    private DistributionSummary getSummary;
-//    private DistributionSummary addSummary;
-
     @Autowired
     public AtlasMetricsMode(MeterRegistry meterRegistry) {
         this.meterRegistry = meterRegistry;
@@ -71,28 +63,5 @@ public class AtlasMetricsMode implements MetricsMode {
                 .description("Quantity of requests to AccountService addAmount method.")
                 .tags("amount", "add")
                 .register(meterRegistry);
-
-//        getTimer = Timer
-//                .builder("getRequestsFrequency")
-//                .description("Frequency of requests to AccountService getAmount method.")
-//                .tags("amount", "get")
-//                .register(meterRegistry);
-//        addTimer = Timer
-//                .builder("addRequestsFrequency")
-//                .description("Frequency of requests to AccountService addAmount method.")
-//                .tags("amount", "add")
-//                .register(meterRegistry);
-
-//        getSummary = DistributionSummary
-//                .builder("getRequestsDistribution")
-//                .description("stashes 'getAmount' requests information frequency")
-//                .tags("amount", "get")
-//                .register(meterRegistry);
-//
-//        addSummary = DistributionSummary
-//                .builder("addRequestsDistribution")
-//                .description("stashes 'addAmount' requests information frequency")
-//                .tags("amount", "add")
-//                .register(meterRegistry);
     }
 }

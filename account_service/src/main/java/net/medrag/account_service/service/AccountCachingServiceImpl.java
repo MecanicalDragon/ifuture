@@ -67,8 +67,8 @@ public class AccountCachingServiceImpl implements AccountCachingService {
         }
     }
 
-    @CacheEvict("amount")
+    @CacheEvict(value = "amount", allEntries = true)
     public void evictCache(Integer id) {
-        log.info("Evicting cached amount for id {}.", id);
+        log.info("Amount cache has been evicted.");
     }
 }

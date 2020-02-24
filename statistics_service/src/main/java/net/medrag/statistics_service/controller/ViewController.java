@@ -7,9 +7,7 @@ import net.medrag.statistics_service.service.StatisticsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * {@author} Stanislav Tretyakov
@@ -27,8 +25,7 @@ public class ViewController {
     }
 
 
-    //TODO: make post
-    @RequestMapping("/reset")
+    @DeleteMapping("/reset")
     @ResponseBody
     public String reset() {
         System.out.println("reset");
