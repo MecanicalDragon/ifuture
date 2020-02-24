@@ -1,6 +1,5 @@
 package net.medrag.account_service.controller;
 
-import io.micrometer.core.annotation.Timed;
 import net.medrag.account_service.controller.api.AccountService;
 import net.medrag.account_service.service.api.AccountCachingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
  * {@author} Stanislav Tretyakov
  * 22.02.2020
  */
-@Timed
 @RestController
 @RequestMapping("/amount")
 public class AccountServiceImpl implements AccountService {

@@ -4,6 +4,7 @@ import com.netflix.spectator.atlas.AtlasConfig;
 import io.micrometer.atlas.AtlasMeterRegistry;
 import io.micrometer.core.instrument.Clock;
 import io.micrometer.core.instrument.MeterRegistry;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -19,24 +20,38 @@ import java.time.Duration;
  * 22.02.2020
  */
 @ConditionalOnProperty(
-        name="account.service.metrics.mode",
+        name = "account.service.metrics.mode",
         havingValue = "atlas")
 @Configuration
 @ComponentScan("net.medrag")
 public class AtlasMetricsConfig {
 
+    @Value("${atlas.uri}")
+    private String atlasUri;
+
+    @Value("${atlas.metrics.collecting.period.in.seconds}")
+    private Integer atlasPeriod;
+
     @Bean
-    public MeterRegistry meterRegistry(){
+    public MeterRegistry meterRegistry() {
         return new AtlasMeterRegistry(atlasConfig(), Clock.SYSTEM);
     }
 
     @Bean
-    public AtlasConfig atlasConfig(){
+    public AtlasConfig atlasConfig() {
         return new AtlasConfig() {
             @Override
             public Duration step() {
-                return Duration.ofSeconds(60);
+                if (atlasPeriod == null || atlasPeriod < 10)
+                    atlasPeriod = 10;
+                return Duration.ofSeconds(atlasPeriod);
             }
+
+            @Override
+            public String uri() {
+                return atlasUri;
+            }
+
             @Override
             public String get(String s) {
                 return null;

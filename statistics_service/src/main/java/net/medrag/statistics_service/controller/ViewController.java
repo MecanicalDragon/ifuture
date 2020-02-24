@@ -1,7 +1,6 @@
 package net.medrag.statistics_service.controller;
 
 import lombok.val;
-import net.medrag.statistics_service.model.StatsResponse;
 import net.medrag.statistics_service.service.StatisticsService;
 import net.medrag.statistics_service.service.StatisticsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,7 @@ public class ViewController {
     }
 
 
-    @DeleteMapping("/reset")
+    @RequestMapping(value = "/reset", method = {RequestMethod.DELETE, RequestMethod.POST})
     @ResponseBody
     public String reset() {
         System.out.println("reset");
@@ -33,7 +32,7 @@ public class ViewController {
         return "OK";
     }
 
-    @RequestMapping("/{amount}")
+    @GetMapping("/{amount}")
     public String getStats(@PathVariable int amount, Model model) {
         val lastGetStatsRecords = statisticsService.getLastGetAmountStatsRecords(amount);
         val lastAddStatsRecords = statisticsService.getLastAddAmountStatsRecords(amount);
