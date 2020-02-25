@@ -5,7 +5,7 @@
     <title>Account Service Statistics</title>
 </head>
 <body>
-<div style="display: flex">
+<div id="main" style="display: flex">
     <div style="padding: 5px; text-align: center">
         <h3>GetAmount Requests</h3>
         <table style="border: 2px double dimgray;">
@@ -49,36 +49,22 @@
         </table>
     </div>
 </div>
-<!--<button onclick="download_csv()">Download CSV</button>-->
-<!--<button onclick="reset()">Evict statistics</button>-->
+<br/>
+<br/>
+<div style="padding: 10px;">
+    <button onclick="reset()">Evict statistics</button>
+</div>
 
 <script>
-    var data = [
-        ['Foo', 'programmer'],
-        ['Bar', 'bus driver'],
-        ['Moo', 'Reindeer Hunter']
-    ];
-
-    function reset(){
-        var url = new URL(window.location.origin + '/addResp');
-        fetch(url, {method: 'POST'})
-    }
-
-
-    function download_csv() {
-        document.getElementById("getBody");
-        var csv = 'Start,End,Amount,Total\n';
-        data.forEach(function(row) {
-            csv += row.join(',');
-            csv += "\n";
-        });
-
-        console.log(csv);
-        var hiddenElement = document.createElement('a');
-        hiddenElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csv);
-        hiddenElement.target = '_blank';
-        hiddenElement.download = 'people.csv';
-        hiddenElement.click();
+    function reset() {
+        var location = window.location.toString();
+        var index = location.lastIndexOf("/");
+        var url = new URL(location.substring(0, index) + '/reset');
+        fetch(url, {method: 'POST'}).then(function (response) {
+            if (response.status === 200) {
+                document.getElementById("main").innerText = "Database has been evicted. Reload the page."
+            }
+        })
     }
 </script>
 

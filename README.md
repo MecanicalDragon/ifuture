@@ -22,7 +22,7 @@ If you've picked custom statistics service, look next chapter.
 Meant to collect statistic of AccountService requests. By default uses 8081 port. Does scheduled job of collecting 
 statistics from AccountService. AccountService root url and cron expression can be denoted in properties.
 App shows collected statistics by GET `<host>:<port>/<amount>` url, where 'amount' - quantity of last added entries.<br/>
-Statistic can be evicted hitting with POST or DELETE to `<host>:<port>/reset` url. Server restart does not evict the statistic.
+Statistic can be evicted hitting with POST or DELETE to `<host>:<port>/reset` url or with a button at the bottom of webpage. Server restart does not evict the statistic.
 
 #### TestClient
 Just launch it, specifying required parameters in properties file or in command line arguments. Command line arguments have precedence.<br/>
@@ -32,4 +32,4 @@ Just launch it, specifying required parameters in properties file or in command 
     - 'idList' - list of ids. Specify it, separating digits with commas or hyphens for denoting exact values or ranges respectively.
     - 'account.service.url' - root url of AccountService.
     
-By default TestClient will be launched on port 8082. Hit */potDoNotCook* url with any method to stop infinite requesting.
+By default TestClient will be launched on port 8082. Hit */potDoNotCook* url with any method to stop application.

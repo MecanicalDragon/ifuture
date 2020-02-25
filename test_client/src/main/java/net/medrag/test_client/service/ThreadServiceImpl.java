@@ -1,6 +1,5 @@
 package net.medrag.test_client.service;
 
-import lombok.val;
 import net.medrag.test_client.service.api.ThreadService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +40,11 @@ public class ThreadServiceImpl implements ThreadService {
 
     public ThreadServiceImpl(RestTemplateBuilder restTemplateBuilder) {
         this.restTemplate = restTemplateBuilder.rootUri(accountServiceUrl).build();
-        this.threadFactory = Thread::new;
+        this.threadFactory = (r) -> {
+            Thread t = new Thread(r);
+            t.setDaemon(true);
+            return t;
+        };
     }
 
     public Thread doGetAmountRequest() {
@@ -76,9 +79,9 @@ public class ThreadServiceImpl implements ThreadService {
 
         getRequest = () -> {
             try {
-                val id = ids.get((int) (Math.random() * ids.size()));
+                Integer id = ids.get((int) (Math.random() * ids.size()));
                 LOGGER.info("Sending getAmount request with id {} to AccountService...", id);
-                val resp = restTemplate.getForObject(accountServiceUrl + "/amount/get/" + id, Integer.class);
+                Long resp = restTemplate.getForObject(accountServiceUrl + "/amount/get/" + id, Long.class);
                 LOGGER.info("GetAmount request for id {} was successful. Response is {}", id, resp);
             } catch (Exception e) {
                 LOGGER.error("Looks like connection refused: {}", e.getMessage());
@@ -87,8 +90,8 @@ public class ThreadServiceImpl implements ThreadService {
 
         addRequest = () -> {
             try {
-                val id = ids.get((int) (Math.random() * ids.size()));
-                val amount = (int) (Math.random() * 1000);
+                Integer id = ids.get((int) (Math.random() * ids.size()));
+                Integer amount = (int) (Math.random() * 1000);
                 LOGGER.info("Sending addAmount request with id {} and amount {} to AccountService...", id, amount);
                 restTemplate.postForLocation(String.format("%s/amount/add/%s/%s", accountServiceUrl, id, amount), null);
                 LOGGER.info("AddAmount request for id {} was successful.", id);

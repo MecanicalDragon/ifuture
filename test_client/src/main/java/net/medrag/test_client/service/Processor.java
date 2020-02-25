@@ -1,12 +1,12 @@
 package net.medrag.test_client.service;
 
-import lombok.val;
 import net.medrag.test_client.service.api.ProcessorApi;
 import net.medrag.test_client.service.api.ThreadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -30,13 +30,15 @@ public class Processor implements ProcessorApi {
 
     public void process() {
 
-        val readService = Executors.newFixedThreadPool(rCount);
-        val writeService = Executors.newFixedThreadPool(wCount);
+        ExecutorService readService = Executors.newFixedThreadPool(rCount);
+        ExecutorService writeService = Executors.newFixedThreadPool(wCount);
 
         while (processing.get()) {
             readService.submit(threadService.doGetAmountRequest());
             writeService.submit(threadService.doAddAmountRequest());
         }
+        readService.shutdownNow();
+        writeService.shutdownNow();
     }
 
     public void stop() {    //  Hammertime!

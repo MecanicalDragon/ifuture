@@ -27,7 +27,6 @@ public class ViewController {
     @RequestMapping(value = "/reset", method = {RequestMethod.DELETE, RequestMethod.POST})
     @ResponseBody
     public String reset() {
-        System.out.println("reset");
         statisticsService.resetStatistics();
         return "OK";
     }

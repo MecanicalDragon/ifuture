@@ -26,7 +26,8 @@ public abstract class RequestStatisticsSnapshot {
 
     @Id
     @Column(name = "ID")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @SequenceGenerator(name = "stats_id_generator", sequenceName = "AMOUNT_SEQUENCE", allocationSize = 1)
+    @GeneratedValue(generator = "stats_id_generator")
     @JsonIgnore
     private Long id;
 

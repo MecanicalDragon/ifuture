@@ -1,70 +1,48 @@
 package net.medrag.account_service.config;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import org.springframework.web.util.UriComponentsBuilder;
 import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
 import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.paths.Paths;
-import springfox.documentation.spring.web.paths.RelativePathProvider;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
-
-import javax.servlet.ServletContext;
 
 @Configuration
 @EnableSwagger2
 public class OpenAPIDocumentationConfig {
 
-    ApiInfo apiInfo() {
+    private static final String VERSION = "1.0";
+    private static final String LICENSE = "Apache 2.0";
+    private static final String LICENSE_URL = "http://www.apache.org/licenses/LICENSE-2.0.html";
+    private static final String TITLE = "AccountService";
+    private static final String DESCRIPTION = "Managing accounts' amounts";
+    private static final String AUTHOR = "Stanislav Tretyakov";
+    private static final String EMAIL = "gaffstranger@gmail.com";
+    private static final String AUTHOR_URL = "http://localhost:8080";
+
+    private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("AccountService")
-                .description("Managing accounts' amounts")
-                .license("Apache 2.0")
-                .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html")
-                .termsOfServiceUrl("")
-                .version("1.0.0")
-                .contact(new Contact("Stanislav Tretyakov","", "gaffstranger@gmail.com"))
+                .title(TITLE)
+                .description(DESCRIPTION)
+                .license(LICENSE)
+                .licenseUrl(LICENSE_URL)
+                .version(VERSION)
+                .contact(new Contact(AUTHOR, AUTHOR_URL, EMAIL))
                 .build();
     }
 
     @Bean
-    public Docket customImplementation(ServletContext servletContext, @Value("${openapi.swaggerTests.base-path:}") String basePath) {
+    public Docket productApi() {
         return new Docket(DocumentationType.SWAGGER_2)
+                .apiInfo(apiInfo())
+                .pathMapping("/")
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("net.medrag.account_service.controller"))
-                .build()
-                .pathProvider(new BasePathAwareRelativePathProvider(servletContext, basePath))
-                .directModelSubstitute(java.time.LocalDate.class, java.sql.Date.class)
-                .directModelSubstitute(java.time.OffsetDateTime.class, java.util.Date.class)
-                .apiInfo(apiInfo());
-    }
-
-    class BasePathAwareRelativePathProvider extends RelativePathProvider {
-        private String basePath;
-
-        public BasePathAwareRelativePathProvider(ServletContext servletContext, String basePath) {
-            super(servletContext);
-            this.basePath = basePath;
-        }
-
-        @Override
-        protected String applicationPath() {
-            return  Paths.removeAdjacentForwardSlashes(UriComponentsBuilder.fromPath(super.applicationPath()).path(basePath).build().toString());
-        }
-
-        @Override
-        public String getOperationPath(String operationPath) {
-            UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.fromPath("/");
-            return Paths.removeAdjacentForwardSlashes(
-                    uriComponentsBuilder.path(operationPath.replaceFirst("^" + basePath, "")).build().toString());
-        }
+                .build();
     }
 
 }

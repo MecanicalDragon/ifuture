@@ -17,7 +17,8 @@ public class Controller {
     }
 
     @RequestMapping("/potDoNotCook")
-    public void silence(){
+    public String silence(){
         processor.stop();
+        return "Stopping...";
     }
 }
