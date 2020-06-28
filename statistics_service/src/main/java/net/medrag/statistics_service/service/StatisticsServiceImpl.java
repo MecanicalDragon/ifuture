@@ -74,8 +74,6 @@ public class StatisticsServiceImpl implements StatisticsService{
                         statistics.getAddAmountRequestQuantity(), totalAdd);
 
                 try {
-                    System.out.println(newGetAmountSnapshot);
-                    System.out.println(newAddAmountSnapshot);
                     getRepository.save(newGetAmountSnapshot);
                     addRepository.save(newAddAmountSnapshot);
                     log.info("Statistics have been stored in the database successfully.");
